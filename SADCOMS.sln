@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SADCOMS.API", "SADCOMS.API\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SADCOMS.Worker", "SADCOMS.Worker\SADCOMS.Worker.csproj", "{F47003D0-6BFF-4B8A-9AC1-62689CF054AE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SADCOMS.Tests", "SADCOMS.Tests\SADCOMS.Tests.csproj", "{39902F0A-3E39-4950-9F04-8B952C885EDE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{F47003D0-6BFF-4B8A-9AC1-62689CF054AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F47003D0-6BFF-4B8A-9AC1-62689CF054AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F47003D0-6BFF-4B8A-9AC1-62689CF054AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39902F0A-3E39-4950-9F04-8B952C885EDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39902F0A-3E39-4950-9F04-8B952C885EDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39902F0A-3E39-4950-9F04-8B952C885EDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39902F0A-3E39-4950-9F04-8B952C885EDE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
