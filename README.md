@@ -41,7 +41,7 @@ dotnet test
 
 ## Status
 - [x] Solution structure
-- [ ] Domain entities
+- [x] Domain entities
 - [ ] EF Core + migrations
 - [ ] REST endpoints
 - [ ] RabbitMQ messaging
