@@ -36,4 +36,14 @@ dotnet run
 ### Run Tests
 ```bash
 cd SADCOMS.Tests
-dotne
+dotnet test
+```
+
+## Status
+- [x] Solution structure
+- [ ] Domain entities
+- [ ] EF Core + migrations
+- [ ] REST endpoints
+- [ ] RabbitMQ messaging
+- [ ] React frontend
+- [ ] Docker Compose
