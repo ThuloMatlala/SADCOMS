@@ -1,0 +1,6 @@
+@SADCOMS.API_HostAddress = http://localhost:5195
+
+GET {{SADCOMS.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
