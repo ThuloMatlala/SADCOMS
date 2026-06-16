@@ -10,6 +10,18 @@ public class AppDbContext : DbContext
 
   }
 
+  protected override void OnModelCreating(ModelBuilder modelBuilder)
+  {
+    modelBuilder.Entity<Order>()
+        .Property(o => o.TotalAmount)
+        .HasPrecision(18, 2);
+
+    modelBuilder.Entity<OrderLineItem>()
+        .Property(oli => oli.UnitPrice)
+        .HasPrecision(18, 2);
+  }
+
+
   public DbSet<Customer> Customers { get; set; }
   public DbSet<Order> Orders { get; set; }
   public DbSet<OrderLineItem> OrderLineItems { get; set; }

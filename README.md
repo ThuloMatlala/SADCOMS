@@ -32,6 +32,17 @@ docker compose up -d
 
 > Note: `docker-compose.yml` sets `platform: linux/amd64` for Apple Silicon (M1/M2/M3) compatibility. Remove this line if running on Windows.
 
+### Apply Database Migrations
+```bash
+cd SADCOMS.API
+dotnet ef database update
+```
+
+### Add a New Migration
+```bash
+dotnet ef migrations add <MigrationName>
+```
+
 ### Run the API
 ```bash
 cd SADCOMS.API
@@ -54,8 +65,8 @@ dotnet test
 ## Status
 - [x] Solution structure
 - [x] Domain entities
-- [ ] Docker Compose
-- [ ] EF Core + migrations
+- [x] Docker Compose
+- [x] EF Core + migrations
 - [ ] REST endpoints
 - [ ] RabbitMQ messaging
 - [ ] React frontend
