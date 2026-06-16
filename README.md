@@ -16,3 +16,24 @@ SADCOMS/
 ├── SADCOMS.Tests/      # Unit tests
 └── SADCOMS.Web/        # React + TypeScript frontend
 
+### Prerequisites
+- .NET 8 SDK
+- Node.js 18+
+
+### Run the API
+```bash
+cd SADCOMS.API
+dotnet run
+# Swagger available at https://localhost:5001/swagger
+```
+
+### Run the Worker
+```bash
+cd SADCOMS.Worker
+dotnet run
+```
+
+### Run Tests
+```bash
+cd SADCOMS.Tests
+dotne
