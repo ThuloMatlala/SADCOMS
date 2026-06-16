@@ -16,9 +16,21 @@ SADCOMS/
 ├── SADCOMS.Tests/      # Unit tests
 └── SADCOMS.Web/        # React + TypeScript frontend
 
+## Getting Started
+
 ### Prerequisites
 - .NET 8 SDK
 - Node.js 18+
+- Docker
+
+### Start SQL Server
+
+```bash
+docker compose up -d
+# SQL Server available at localhost:1433 (user: sa)
+```
+
+> Note: `docker-compose.yml` sets `platform: linux/amd64` for Apple Silicon (M1/M2/M3) compatibility. Remove this line if running on Windows.
 
 ### Run the API
 ```bash
@@ -42,8 +54,8 @@ dotnet test
 ## Status
 - [x] Solution structure
 - [x] Domain entities
+- [ ] Docker Compose
 - [ ] EF Core + migrations
 - [ ] REST endpoints
 - [ ] RabbitMQ messaging
 - [ ] React frontend
-- [ ] Docker Compose
