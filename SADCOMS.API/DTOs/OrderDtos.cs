@@ -12,7 +12,7 @@ public record CreateOrderLineItemRequest
   [Range(1, int.MaxValue)]
   public required int Quantity { get; init; }
 
-  [Range(0.01, double.MaxValue)]
+  [Range(0, double.MaxValue)]
   public required decimal UnitPrice { get; init; }
 }
 

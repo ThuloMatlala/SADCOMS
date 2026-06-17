@@ -67,6 +67,6 @@ dotnet test
 - [x] Domain entities
 - [x] Docker Compose
 - [x] EF Core + migrations
-- [ ] REST endpoints
+- [x] REST endpoints
 - [ ] RabbitMQ messaging
 - [ ] React frontend

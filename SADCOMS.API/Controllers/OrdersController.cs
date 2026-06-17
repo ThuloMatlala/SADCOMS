@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SADCOMS.API.Data;
 using SADCOMS.API.DTOs;
 using SADCOMS.Domain.Entities;
+using SADCOMS.Domain.Validation;
 using SADCOMS.Domain.Enums;
 
 namespace SADCOMS.API.Controllers;
@@ -27,6 +28,13 @@ public class OrdersController : ControllerBase
     if (customer is null)
     {
       return BadRequest($"Customer '{request.CustomerId}' was not found.");
+    }
+
+    if (!SadcCurrencyValidator.IsValid(
+      customer.CountryCode.ToUpperInvariant(),
+      request.CurrencyCode.Trim().ToUpperInvariant()))
+    {
+      return BadRequest($"Currency '{request.CurrencyCode}' is not valid for country '{customer.CountryCode}'.");
     }
 
     var order = new Order
@@ -72,7 +80,11 @@ public class OrdersController : ControllerBase
   }
 
   [HttpPut("{id:guid}/status")]
-  public async Task<ActionResult<OrderResponse>> UpdateStatus(Guid id, UpdateOrderStatusRequest request, CancellationToken cancellationToken)
+  public async Task<ActionResult<OrderResponse>> UpdateStatus(
+    Guid id,
+    UpdateOrderStatusRequest request,
+    [FromHeader(Name = "Idempotency-Key")] string? idempotencyKey,
+    CancellationToken cancellationToken)
   {
     var order = await _context.Orders
         .Include(o => o.LineItems)
