@@ -1,4 +1,4 @@
-const BASE_URL = 'https://localhost:5195';
+const BASE_URL = 'http://localhost:5195';
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> { 
   const response = await fetch(`${BASE_URL}${path}`, {
@@ -17,4 +17,12 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
 
 export const api = {
   get: <T>(path: string) => request<T>(path),
+  post: <T>(path: string, body: unknown) => request<T>(path, { 
+    method: 'POST', 
+    body: JSON.stringify(body) 
+  }),
+   put: <T>(path: string, body: unknown) => request<T>(path, { 
+    method: 'PUT', 
+    body: JSON.stringify(body) 
+  }),
 }
