@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import type { Order } from '../../../types';
 import { api } from '../../../api/client';
+import { statusLabel } from '../../../lib/orderStatus';
 
 export default function OrderDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -29,7 +30,7 @@ export default function OrderDetailPage() {
 
       <section>
         <p><strong>Customer:</strong> {order.customerId}</p>
-        <p><strong>Status:</strong> {order.status}</p>
+        <p><strong>Status:</strong> {statusLabel[order.status]}</p>
         <p><strong>Currency:</strong> {order.currencyCode}</p>
         <p><strong>Total:</strong> {order.currencyCode} {order.totalAmount}</p>
         <p><strong>Created:</strong> {order.createdAt}</p>

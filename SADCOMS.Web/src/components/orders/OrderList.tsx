@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import type { Order } from '../../types';
+import { statusLabel } from '../../lib/orderStatus';
 import './OrderList.css';
 
 interface OrderListProps{
@@ -8,12 +9,6 @@ interface OrderListProps{
 
 export default function OrderList({ orders }: OrderListProps) {
   const navigate = useNavigate();
-  const statusLabel: Record<number, string> = {
-  0: 'Pending',
-  1: 'Paid',
-  2: 'Fulfilled',
-  3: 'Cancelled',
-  };
   
 
   if(!orders || orders.length < 1)
@@ -23,7 +18,7 @@ export default function OrderList({ orders }: OrderListProps) {
     <table className="w-full text-white border-collapse">
       <thead>
         <tr className="text-left border-b border-white/20">
-          <th className="py-2 pr-4">Order</th>
+          <th className="py-2 pr-4">Order Id</th>
           <th className="py-2 pr-4">Created</th>
           <th className="py-2 pr-4">Status</th>
           <th className="py-2 pr-4">Currency</th>
