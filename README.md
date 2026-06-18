@@ -70,4 +70,5 @@ dotnet test
 - [x] REST endpoints
 - [x] RabbitMQ messaging
 - [x] Worker services
-- [ ] React frontend
+- [x] React frontend
+- [ ] Testing
