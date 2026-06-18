@@ -22,6 +22,7 @@ export default function CustomerListPage() {
   
   return (
     <div className='container'>
+      <h1>Customers</h1>
       <CustomerList customers={customers} />
       <Link to="/customers/create">
         <button>Create New Customer</button>

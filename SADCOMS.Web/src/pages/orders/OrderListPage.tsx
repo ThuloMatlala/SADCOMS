@@ -21,13 +21,14 @@ export default function OrderListPage() {
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
+
   return (
     
     <div className='container'>
-      OrderListPage
+      <h1>Orders</h1>
       <OrderList orders={orders} />
 
-      <Link to="/order/new">
+      <Link to="/orders/new">
         <button>Create New Order</button>
       </Link>
     </div>
