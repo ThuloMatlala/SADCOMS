@@ -13,13 +13,30 @@ export default function CustomerCreateForm() {
   const [form, setForm] = useState<CustomerForm>({ name: '', email: '', countryCode: '' })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [emailError, setEmailError] = useState<string | null>(null)
+
+  function isValidEmail(value: string) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+  }
 
   function handleChange(e: { target: { name: string; value: string } }) {
-    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
+    const { name, value } = e.target
+    setForm(prev => ({ ...prev, [name]: value }))
+    if (name === 'email') setEmailError(null)
+  }
+
+  function handleEmailBlur() {
+    if (form.email && !isValidEmail(form.email)) {
+      setEmailError('Please enter a valid email address')
+    }
   }
 
   async function handleSubmit(e: { preventDefault(): void }) {
     e.preventDefault()
+    if (!isValidEmail(form.email)) {
+      setEmailError('Please enter a valid email address')
+      return
+    }
     setLoading(true)
     setError(null)
     try {
@@ -52,8 +69,10 @@ export default function CustomerCreateForm() {
           type="email"
           value={form.email}
           onChange={handleChange}
+          onBlur={handleEmailBlur}
           required
         />
+        {emailError && <span style={{ color: 'red', fontSize: '0.85em' }}>{emailError}</span>}
       </div>
       <div className='form-group'>
         <label htmlFor="countryCode">Country Code</label>
@@ -65,7 +84,7 @@ export default function CustomerCreateForm() {
           required
         />
       </div>
-      {error && <p className='form-full' style={{ color: 'red', margin: 0 }}>{error}</p>}
+      {error && <p className='form-full' style={{ color: 'red', margin: 0, fontSize: '9px' }}>{error}</p>}
       <button type="submit" disabled={loading}>
         {loading ? 'Saving...' : 'Create Customer'}
       </button>
