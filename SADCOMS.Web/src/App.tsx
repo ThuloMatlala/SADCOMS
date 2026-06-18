@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import CustomerListPage from './pages/customers/CustomerListPage';
 import './App.css'
+import CustomerCreatePage from './pages/customers/create/CustomerCreatePage';
 
 function Home() {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/customers" element={<CustomerListPage />} />
+        <Route path="/customers/create" element={<CustomerCreatePage />} />
       </Routes>
     </BrowserRouter>
   )
