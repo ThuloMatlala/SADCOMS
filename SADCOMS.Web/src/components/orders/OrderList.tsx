@@ -1,34 +1,45 @@
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import type { Order } from '../../types';
+import './OrderList.css';
 
 interface OrderListProps{
   orders: Array<Order>;
 }
 
 export default function OrderList({ orders }: OrderListProps) {
+  const navigate = useNavigate();
   const statusLabel: Record<number, string> = {
   0: 'Pending',
-  1: 'Paid', 
+  1: 'Paid',
   2: 'Fulfilled',
   3: 'Cancelled',
 };
   return (
-    <ul>
-      {orders.map(o => (
-        <Link key={o.id} to={`/orders/${o.id}`}>
-        <li className='text-white' >
-          <span>{o.customerId} — ({statusLabel[o.status]}) {o.currencyCode} {o.totalAmount} {o.createdAt}</span>
-          <ul>
-            {o.lineItems.map(item => (
-              <li key={item.id}>
-                  {item.productSku} × {item.quantity} @ {item.unitPrice}
-              </li>
-            ))}
-          </ul>
-          </li>
-                </Link>
-          
-      ))}
-    </ul>
+    <table className="w-full text-white border-collapse">
+      <thead>
+        <tr className="text-left border-b border-white/20">
+          <th className="py-2 pr-4">Order</th>
+          <th className="py-2 pr-4">Created</th>
+          <th className="py-2 pr-4">Status</th>
+          <th className="py-2 pr-4">Currency</th>
+          <th className="py-2 pr-4">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {orders.map(o => (
+          <tr
+            key={o.id}
+            onClick={() => navigate(`/orders/${o.id}`)}
+            className="orderRow"
+          >
+            <td className="py-2 pr-4">{o.id}</td>
+            <td className="py-2 pr-4">{o.createdAt}</td>
+            <td className="py-2 pr-4">{statusLabel[o.status]}</td>
+            <td className="py-2 pr-4">{o.currencyCode}</td>
+            <td className="py-2 pr-4">{o.totalAmount}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   )
 }
