@@ -2,9 +2,15 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../../api/client'
 
+interface CustomerForm {
+  name: string;
+  email: string;
+  countryCode: string;
+}
+
 export default function CustomerCreateForm() {
   const navigate = useNavigate()
-  const [form, setForm] = useState({ name: '', email: '', countryCode: '' })
+  const [form, setForm] = useState<CustomerForm>({ name: '', email: '', countryCode: '' })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -25,6 +31,7 @@ export default function CustomerCreateForm() {
       setLoading(false)
     }
   }
+
   return (
     <form onSubmit={handleSubmit} className='form'>
       <div className='form-group'>
