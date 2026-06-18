@@ -26,42 +26,42 @@ export default function CustomerCreateForm() {
     }
   }
   return (
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="name">Name</label>
-          <input
-            id="name"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            value={form.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="countryCode">Country Code</label>
-          <input
-            id="countryCode"
-            name="countryCode"
-            value={form.countryCode}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button type="submit" disabled={loading}>
-          {loading ? 'Saving...' : 'Create Customer'}
-        </button>
-      </form>
+    <form onSubmit={handleSubmit} className='form'>
+      <div className='form-group'>
+        <label htmlFor="name">Name</label>
+        <input
+          id="name"
+          name="name"
+          value={form.name}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className='form-group'>
+        <label htmlFor="email">Email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          value={form.email}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div className='form-group'>
+        <label htmlFor="countryCode">Country Code</label>
+        <input
+          id="countryCode"
+          name="countryCode"
+          value={form.countryCode}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      {error && <p className='form-full' style={{ color: 'red', margin: 0 }}>{error}</p>}
+      <button type="submit" disabled={loading}>
+        {loading ? 'Saving...' : 'Create Customer'}
+      </button>
+    </form>
   )
 }
