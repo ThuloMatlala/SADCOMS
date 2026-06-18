@@ -68,6 +68,6 @@ dotnet test
 - [x] Docker Compose
 - [x] EF Core + migrations
 - [x] REST endpoints
-- [ ] RabbitMQ messaging
-- [ ] Worker services
+- [x] RabbitMQ messaging
+- [x] Worker services
 - [ ] React frontend
