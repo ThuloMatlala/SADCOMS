@@ -5,6 +5,8 @@ using SADCOMS.API.DTOs;
 using SADCOMS.Domain.Entities;
 using SADCOMS.Domain.Validation;
 using SADCOMS.Domain.Enums;
+using SADCOMS.Domain.Events;
+using SADCOMS.API.Messaging;
 
 namespace SADCOMS.API.Controllers;
 
@@ -15,10 +17,12 @@ public class OrdersController : ControllerBase
   private const int MaxPageSize = 100;
 
   private readonly AppDbContext _context;
+  private readonly RabbitMqPublisher _rabbitMqPublisher;
 
-  public OrdersController(AppDbContext context)
+  public OrdersController(AppDbContext context, RabbitMqPublisher rabbitMqPublisher)
   {
     _context = context;
+    _rabbitMqPublisher = rabbitMqPublisher;
   }
 
   [HttpPost]
@@ -58,6 +62,17 @@ public class OrdersController : ControllerBase
 
     _context.Orders.Add(order);
     await _context.SaveChangesAsync(cancellationToken);
+
+    var orderEvent = new OrderCreatedEvent
+    (
+      order.Id,
+      customer.Id,
+      order.TotalAmount,
+      order.CurrencyCode,
+      DateTimeOffset.UtcNow
+    );
+
+    _rabbitMqPublisher.PublishOrderCreated(orderEvent);
 
     var response = OrderResponse.FromEntity(order);
     return CreatedAtAction(nameof(GetById), new { id = order.Id }, response);

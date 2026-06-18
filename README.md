@@ -69,4 +69,5 @@ dotnet test
 - [x] EF Core + migrations
 - [x] REST endpoints
 - [ ] RabbitMQ messaging
+- [ ] Worker services
 - [ ] React frontend
