@@ -47,7 +47,7 @@
   grid-column: 1 / -1;
 }
 
-.form button[type='submit'] {
+button {
   grid-column: 1 / -1;
   padding: 10px;
   background: #6366f1;
@@ -60,11 +60,11 @@
   transition: background 0.2s;
 }
 
-.form button[type='submit']:hover:not(:disabled) {
+button:hover:not(:disabled) {
   background: #4f46e5;
 }
 
-.form button[type='submit']:disabled {
+button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
