@@ -4,6 +4,7 @@ import './App.css'
 import CustomerCreatePage from './pages/customers/create/CustomerCreatePage';
 import OrderListPage from './pages/orders/OrderListPage';
 import CreateOrderPage from './pages/orders/new/CreateOrderPage';
+import OrderDetailPage from './pages/orders/[id]/OrderDetailPage';
 
 function Home() {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ function App() {
         <Route path="/customers/create" element={<CustomerCreatePage />} />
         <Route path="/orders" element={<OrderListPage />} />
         <Route path="/orders/new" element={<CreateOrderPage />} />
-        
+        <Route path="/orders/:id" element={<OrderDetailPage />} />
       </Routes>
     </BrowserRouter>
   )

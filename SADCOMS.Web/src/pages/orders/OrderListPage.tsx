@@ -25,7 +25,13 @@ export default function OrderListPage() {
   return (
     
     <div className='container'>
-      <h1>Orders</h1>
+      <div className='header'>
+        <h1>Orders</h1>
+        {/* Add these components eventually */}
+        {/* <CustomerFilter/> */}
+        {/* <Status Filter/> */}
+        {/* <Sort/> */}
+      </div>
       <OrderList orders={orders} />
 
       <Link to="/orders/new">
