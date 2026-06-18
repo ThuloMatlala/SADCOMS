@@ -13,7 +13,12 @@ export default function OrderList({ orders }: OrderListProps) {
   1: 'Paid',
   2: 'Fulfilled',
   3: 'Cancelled',
-};
+  };
+  
+
+  if(!orders || orders.length < 1)
+    return (<p>There are no orders for the selected status</p>)
+  
   return (
     <table className="w-full text-white border-collapse">
       <thead>
@@ -25,6 +30,7 @@ export default function OrderList({ orders }: OrderListProps) {
           <th className="py-2 pr-4">Total</th>
         </tr>
       </thead>
+      
       <tbody>
         {orders.map(o => (
           <tr
