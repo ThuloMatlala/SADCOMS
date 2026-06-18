@@ -5,15 +5,15 @@ import type { Customer, Order } from '../../types'
 
 interface LineItemDraft {
   productSku: string;
-  quantity: number;
-  unitPrice: number;
+  quantity: string;
+  unitPrice: string;
 }
 
 interface OrderCreateFormProps{
   customers: Array<Customer>
 }
 
-const emptyLineItem = (): LineItemDraft => ({ productSku: '', quantity: 1, unitPrice: 0 })
+const emptyLineItem = (): LineItemDraft => ({ productSku: '', quantity: '1', unitPrice: '' })
 
 export default function OrderCreateForm({ customers}:OrderCreateFormProps) {
   const navigate = useNavigate()
@@ -26,7 +26,18 @@ export default function OrderCreateForm({ customers}:OrderCreateFormProps) {
   function updateLineItem(index: number, field: keyof LineItemDraft, value: string) {
     setLineItems(prev => {
       const next = [...prev]
-      next[index] = { ...next[index], [field]: field === 'productSku' ? value : Number(value) }
+      next[index] = { ...next[index], [field]: value }
+      return next
+    })
+  }
+
+  function formatUnitPrice(index: number) {
+    setLineItems(prev => {
+      const next = [...prev]
+      const val = parseFloat(next[index].unitPrice)
+      if (!isNaN(val)) {
+        next[index] = { ...next[index], unitPrice: val.toFixed(2) }
+      }
       return next
     })
   }
@@ -36,7 +47,12 @@ export default function OrderCreateForm({ customers}:OrderCreateFormProps) {
     setLoading(true)
     setError(null)
     try {
-      const created = await api.post<Order>('/orders', { customerId, currencyCode, lineItems })
+      const lineItemsPayload = lineItems.map(item => ({
+        productSku: item.productSku,
+        quantity: parseInt(item.quantity, 10),
+        unitPrice: parseFloat(item.unitPrice),
+      }))
+      const created = await api.post<Order>('/orders', { customerId, currencyCode, lineItems: lineItemsPayload })
       navigate(`/orders/${created.id}`)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong')
@@ -86,6 +102,7 @@ export default function OrderCreateForm({ customers}:OrderCreateFormProps) {
               <input
                 type="number"
                 min={1}
+                step={1}
                 placeholder="Qty"
                 value={item.quantity}
                 onChange={e => updateLineItem(i, 'quantity', e.target.value)}
@@ -96,9 +113,10 @@ export default function OrderCreateForm({ customers}:OrderCreateFormProps) {
                 type="number"
                 min={0}
                 step="0.01"
-                placeholder="Unit Price"
+                placeholder="0.00"
                 value={item.unitPrice}
                 onChange={e => updateLineItem(i, 'unitPrice', e.target.value)}
+                onBlur={() => formatUnitPrice(i)}
                 required
               />
               <button

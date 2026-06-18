@@ -37,7 +37,7 @@ export default function OrderList({ orders }: OrderListProps) {
             <td className="py-2 pr-4">{o.createdAt}</td>
             <td className="py-2 pr-4">{statusLabel[o.status]}</td>
             <td className="py-2 pr-4">{o.currencyCode}</td>
-            <td className="py-2 pr-4">{o.totalAmount}</td>
+            <td className="py-2 pr-4">{Number(o.totalAmount).toFixed(2)}</td>
           </tr>
         ))}
       </tbody>

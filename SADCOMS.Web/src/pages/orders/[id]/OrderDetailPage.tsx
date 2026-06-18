@@ -32,7 +32,7 @@ export default function OrderDetailPage() {
         <p><strong>Customer:</strong> {order.customerId}</p>
         <p><strong>Status:</strong> {statusLabel[order.status]}</p>
         <p><strong>Currency:</strong> {order.currencyCode}</p>
-        <p><strong>Total:</strong> {order.currencyCode} {order.totalAmount}</p>
+        <p><strong>Total:</strong> {order.currencyCode} {Number(order.totalAmount).toFixed(2)}</p>
         <p><strong>Created:</strong> {order.createdAt}</p>
       </section>
 
@@ -41,7 +41,7 @@ export default function OrderDetailPage() {
         <ul>
           {order.lineItems.map(item => (
             <li key={item.id}>
-              {item.productSku} × {item.quantity} @ {item.unitPrice}
+              {item.productSku} × {item.quantity} @ {Number(item.unitPrice).toFixed(2)}
             </li>
           ))}
         </ul>
