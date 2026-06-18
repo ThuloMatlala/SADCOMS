@@ -1,11 +1,11 @@
 export interface Order{
-  Id: string;
-  CustomerId: string;
-  Status: OrderStatus;
-  CurrencyCode: string;
-  TotalAmount: number;
-  CreatedAt: string;
-  LineItems: Array<OrderLineItem>;
+  id: string;
+  customerId: string;
+  status: OrderStatus;
+  currencyCode: string;
+  totalAmount: number;
+  createdAt: string;
+  lineItems: Array<OrderLineItem>;
 }
 
 // Can't use enum here — erasableSyntaxOnly requires all TypeScript syntax to be erasable, and enums emit runtime JS
@@ -20,8 +20,8 @@ export type OrderStatus = typeof OrderStatus[keyof typeof OrderStatus];
 
 
 export interface OrderLineItem{
-  Id: string;
-  ProductSku: string;
-  Quantity: number;
-  UnitPrice: number;
+  id: string;
+  productSku: string;
+  quantity: number;
+  unitPrice: number;
 }

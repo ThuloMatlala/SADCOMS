@@ -1,8 +1,8 @@
 export interface Customer {
-  Id: string;
-  Name: string;
-  Email: string;
-  CountryCode: string;
-  CreatedAt: string;
+  id: string;
+  name: string;
+  email: string;
+  countryCode: string;
+  createdAt: string;
 }
 
