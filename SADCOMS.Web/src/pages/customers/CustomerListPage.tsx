@@ -22,6 +22,7 @@ export default function CustomerListPage() {
   
   return (
     <div className='container'>
+      <Link to="/">← Back to Home</Link>
       <h1>Customers</h1>
       <CustomerList customers={customers} />
       <Link to="/customers/create">

@@ -10,6 +10,7 @@ function Home() {
   const navigate = useNavigate();
   return (
     <div className='container'>
+      <h1>SADC OMS</h1>
       <button onClick={() => navigate('/customers')}>Go to Customers</button>
       <button onClick={() => navigate('/orders')}>Go to Orders</button>
     </div>

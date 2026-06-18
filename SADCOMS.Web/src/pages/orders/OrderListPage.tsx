@@ -26,6 +26,7 @@ export default function OrderListPage() {
     
     <div className='container'>
       <div className='header'>
+        <Link to="/">← Back to Home</Link>
         <h1>Orders</h1>
         {/* Add these components eventually */}
         {/* <CustomerFilter/> */}

@@ -5,14 +5,19 @@ interface OrderListProps{
   orders: Array<Order>;
 }
 
-export default function OrderList({orders}:OrderListProps) {
+export default function OrderList({ orders }: OrderListProps) {
+  const statusLabel: Record<number, string> = {
+  0: 'Pending',
+  1: 'Paid', 
+  2: 'Fulfilled',
+  3: 'Cancelled',
+};
   return (
     <ul>
       {orders.map(o => (
-
-        <Link to={`/orders/${o.id}`}>
-        <li className='text-white' key={o.id}>
-          <span>{o.customerId} — ({o.status}) {o.currencyCode} {o.totalAmount} {o.createdAt}</span>
+        <Link key={o.id} to={`/orders/${o.id}`}>
+        <li className='text-white' >
+          <span>{o.customerId} — ({statusLabel[o.status]}) {o.currencyCode} {o.totalAmount} {o.createdAt}</span>
           <ul>
             {o.lineItems.map(item => (
               <li key={item.id}>
