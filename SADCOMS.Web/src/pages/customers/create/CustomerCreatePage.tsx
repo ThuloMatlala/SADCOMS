@@ -1,7 +1,12 @@
-import React from 'react'
+import CustomerCreateForm from "../../../components/customers/CustomerCreateForm";
+
 
 export default function CustomerCreatePage() {
+  
   return (
-    <div>CustomerCreatePage</div>
+    <div className="container">
+      <h1>New Customer</h1>
+      <CustomerCreateForm/>
+    </div>
   )
 }
