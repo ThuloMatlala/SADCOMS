@@ -2,12 +2,14 @@ import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import CustomerListPage from './pages/customers/CustomerListPage';
 import './App.css'
 import CustomerCreatePage from './pages/customers/create/CustomerCreatePage';
+import OrderListPage from './pages/orders/OrderListPage';
 
 function Home() {
   const navigate = useNavigate();
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    <div className='container'>
       <button onClick={() => navigate('/customers')}>Go to Customers</button>
+      <button onClick={() => navigate('/orders')}>Go to Orders</button>
     </div>
   );
 }
@@ -19,6 +21,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/customers" element={<CustomerListPage />} />
         <Route path="/customers/create" element={<CustomerCreatePage />} />
+        <Route path="/orders" element={<OrderListPage />} />
       </Routes>
     </BrowserRouter>
   )
