@@ -109,6 +109,24 @@ To configure locally, ensure `appsettings.Development.json` contains:
 4. You will be redirected to the home page with full access
 5. Click **Logout** on the home page to clear the token
 
+## DevOps
+
+### Docker Compose
+All infrastructure runs via Docker Compose:
+- SQL Server (port 1433)
+- RabbitMQ (port 5672, management UI port 15672)
+
+```bash
+docker compose up -d
+```
+
+### CI Pipeline
+A GitHub Actions pipeline runs on every push:
+- Restores dependencies
+- Builds the solution
+- Runs all tests
+
+
 ## Testing
 Tests are located in `SADCOMS.Tests` and use xUnit.
 
@@ -149,6 +167,6 @@ Tests follow the **Arrange, Act, Assert** pattern. The focus is on pure domain l
 - [x] Integration tests for protected endpoints
 - [x] Frontend auth — handle 401s, pass token
 - [ ] Outbox pattern
-- [ ] Devops
+- [ ] Devops  (Docker Compose + CI pipeline)
 - [ ] ANSWERS.md
 - [ ] Update order status (frontend)
