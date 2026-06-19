@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import type { Order } from '../../../types';
+import { useParams } from 'react-router-dom';
+import type { Customer, Order } from '../../../types';
 import { api } from '../../../api/client';
 import { statusLabel } from '../../../lib/orderStatus';
 import PageHeader from '../../../components/common/PageHeader';
@@ -10,10 +10,15 @@ export default function OrderDetailPage() {
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [customer, setCustomer] = useState<Customer | null>(null);
 
   useEffect(() => {
     api.get<Order>(`/orders/${id}`)
-      .then(data => setOrder(data))
+      .then(data => {
+        setOrder(data);
+        return api.get<Customer>(`/customers/${data.customerId}`);
+      })
+      .then(data => setCustomer(data))
       .catch(err => setError(err.message))
       .finally(() => setLoading(false));
   }, [id]);
@@ -28,7 +33,7 @@ export default function OrderDetailPage() {
       <p className="text-xs">ID: {order.id}</p>
 
       <section>
-        <p><strong>Customer:</strong> {order.customerId}</p>
+        <p><strong>Customer:</strong> {customer ? `${customer.name} (${customer.email})` : order.customerId}</p>
         <p><strong>Status:</strong> {statusLabel[order.status]}</p>
         <p><strong>Currency:</strong> {order.currencyCode}</p>
         <p><strong>Total:</strong> {order.currencyCode} {Number(order.totalAmount).toFixed(2)}</p>
