@@ -56,10 +56,28 @@ cd SADCOMS.Worker
 dotnet run
 ```
 
-### Run Tests
+## Testing
+
+Tests are located in `SADCOMS.Tests` and use xUnit.
+
+### Running Tests
 ```bash
 cd SADCOMS.Tests
 dotnet test
+```
+
+### Test Coverage
+
+**Domain Logic (`OrderTests`)**
+- `UpdateStatus` — validates correct state transitions (Pending → Paid) and rejects invalid ones (Pending → Fulfilled, Fulfilled → anything)
+- `RecalculateTotalAmount` — verifies total is correctly computed as Σ (Quantity × UnitPrice) across all line items
+
+**Validation (`SadcCurrencyValidatorTests`)**
+- Verifies valid SADC country/currency pairings are accepted (e.g. ZA/ZAR)
+- Verifies invalid pairings are rejected (e.g. ZA/KMF)
+
+### Testing Approach
+Tests follow the **Arrange, Act, Assert** pattern. The focus is on pure domain logic — no database or HTTP dependencies in unit tests, making them fast and deterministic.
 ```
 
 ## Status
