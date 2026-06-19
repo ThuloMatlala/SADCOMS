@@ -56,8 +56,39 @@ cd SADCOMS.Worker
 dotnet run
 ```
 
-## Testing
+## API Security
 
+### JWT Authentication
+
+All API endpoints are protected with JWT Bearer authentication.
+
+In production, tokens are issued by **Microsoft Entra ID** (Azure AD):
+- **Authority**: `https://login.microsoftonline.com/{tenant-id}`
+- **Audience**: `api://sadcoms`
+
+### Development Bypass
+
+For local development, a symmetric key is used to generate tokens without a real Entra tenant.
+
+A dev-only endpoint is available to generate a token:
+
+```bash
+GET http://localhost:5195/api/token
+```
+
+This endpoint would be disabled in production.
+
+To configure the dev secret, ensure `appsettings.Development.json` contains:
+
+```json
+{
+  "Jwt": {
+    "DevSecret": "J+1FQYKNEicsD6yQqWFiA00D8HovsiH7Gku0Bbh9WzhLEUVdSa+eedbRIjw9tNiP" //mocked
+  }
+}
+```
+
+## Testing
 Tests are located in `SADCOMS.Tests` and use xUnit.
 
 ### Running Tests
@@ -75,6 +106,12 @@ dotnet test
 **Validation (`SadcCurrencyValidatorTests`)**
 - Verifies valid SADC country/currency pairings are accepted (e.g. ZA/ZAR)
 - Verifies invalid pairings are rejected (e.g. ZA/KMF)
+
+**Integration Tests (`ApiAuthTests`)**
+- Verifies protected endpoints return `401 Unauthorized` without a token
+- Uses `WebApplicationFactory<Program>` to spin up the API in memory — no running server required
+
+
 
 ### Testing Approach
 Tests follow the **Arrange, Act, Assert** pattern. The focus is on pure domain logic — no database or HTTP dependencies in unit tests, making them fast and deterministic.
