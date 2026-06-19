@@ -77,6 +77,8 @@ GET http://localhost:5195/api/token
 ```
 
 This endpoint would be disabled in production.
+The auth token is stored in memory. 
+In production, MSAL would handle token acquisition and caching via Microsoft Entra."
 
 To configure the dev secret, ensure `appsettings.Development.json` contains:
 

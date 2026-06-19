@@ -20,10 +20,15 @@ public class TokenController : ControllerBase
   }
 
   [HttpGet]
-  public IActionResult GetDevToken()
+  public IActionResult GetDevToken([FromQuery] string password)
   {
     if (!_env.IsDevelopment())
       return NotFound();
+
+
+    var devPassword = _config["Jwt:DevPassword"];
+    if (password != devPassword)
+      return Unauthorized("Invalid dev password.");
 
     var secret = _config["Jwt:DevSecret"];
     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret!));
