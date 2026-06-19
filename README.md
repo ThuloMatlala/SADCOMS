@@ -129,5 +129,6 @@ Tests follow the **Arrange, Act, Assert** pattern. The focus is on pure domain l
 - [x] Domain Testing
 - [X] JWT auth
 - [x] Integration tests for test protected endpoints
+- [x] Order page - Fix sorting
+- [ ] update order status
 - [ ] Frontend auth — handle 401s, pass token
-- [ ] Order page - Fix sorting
