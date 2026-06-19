@@ -128,6 +128,6 @@ Tests follow the **Arrange, Act, Assert** pattern. The focus is on pure domain l
 - [x] React frontend
 - [x] Domain Testing
 - [X] JWT auth
-- [ ] Integration tests for test protected endpoints
+- [x] Integration tests for test protected endpoints
 - [ ] Frontend auth — handle 401s, pass token
 - [ ] Order page - Fix sorting

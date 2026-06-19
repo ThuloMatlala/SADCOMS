@@ -65,15 +65,17 @@ export default function OrderListPage() {
     <div className='container'>
       <PageHeader headerText={'Orders'} parentPageName={'Home'} parentPageLink={'/'} />
 
-      <input
-        type="search"
-        placeholder="Filter by customer ID…"
-        value={customerId}
-        onChange={e => { setCustomerId(e.target.value); setPage(1); }}
-      />
+      <div className='order-filters-header'>
+        <input
+          type="search"
+          placeholder="Filter by customer ID…"
+          value={customerId}
+          onChange={e => { setCustomerId(e.target.value); setPage(1); }}
+        />
 
-      <StatusFilter status={status} handleStatusChange={handleStatusChange} />
-      <SortSelector sort={sort} setSort={setSort} setPage={setPage} />
+        <StatusFilter status={status} handleStatusChange={handleStatusChange} />
+        <SortSelector sort={sort} setSort={setSort} setPage={setPage} />
+      </div>
 
       {error && <div>Error: {error}</div>}
       {loading ? <div>Loading...</div> : <OrderList orders={orders} />}

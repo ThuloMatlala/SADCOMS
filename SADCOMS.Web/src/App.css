@@ -266,3 +266,12 @@ button:disabled {
   padding-left: 40px;
   padding-right: 40px;
 }
+
+
+.order-filters-header{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 50%;
+}
