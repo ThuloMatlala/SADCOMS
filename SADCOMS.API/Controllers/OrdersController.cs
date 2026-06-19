@@ -77,7 +77,6 @@ public class OrdersController : ControllerBase
       CreatedAt = DateTimeOffset.UtcNow,
     };
     _context.OutboxMessages.Add(outboxMessage);
-    
     await _context.SaveChangesAsync(cancellationToken);
 
     var response = OrderResponse.FromEntity(order);
