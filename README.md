@@ -121,10 +121,11 @@ docker compose up -d
 ```
 
 ### CI Pipeline
-A GitHub Actions pipeline runs on every push:
-- Restores dependencies
-- Builds the solution
-- Runs all tests
+A GitHub Actions pipeline runs on every push to `main`:
+- Spins up SQL Server and RabbitMQ as service containers
+- Restores, builds, and tests the .NET solution
+- Builds and lints the React frontend
+- Jobs run in parallel for faster feedback
 
 
 ## Testing
