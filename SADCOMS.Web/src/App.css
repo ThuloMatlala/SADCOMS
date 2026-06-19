@@ -275,3 +275,12 @@ button:disabled {
   align-items: center;
   width: 50%;
 }
+
+.login-form{
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  color: #fff;
+  gap: 12px;
+  background-color: #fff;
+}

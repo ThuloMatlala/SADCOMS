@@ -14,10 +14,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
   const api = createApi(token);
 
-  const login = async(password:string) => {
-      api.get<{ token: string }>(`/token?password=${password}`)
-        .then(data => setToken(data.token))
-        .catch(err => console.log(err));
+  const login = async (password: string) => {
+    const data = await api.get<{ token: string }>(`/token?password=${password}`);
+    setToken(data.token);
   };
 
   const logout = () => setToken(null);
