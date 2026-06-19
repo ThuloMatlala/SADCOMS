@@ -41,7 +41,7 @@ export default function OrderListPage() {
   const [customerId, setCustomerId] = useState('');
   const [sort, setSort] = useState('');
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(3);
 
   useEffect(() => {
     dispatch({ type: 'start' });

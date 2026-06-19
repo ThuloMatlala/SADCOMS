@@ -38,7 +38,7 @@ export const CustomerListPage=()=> {
   });
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(3);
 
   useEffect(() => {
     dispatch({ type: 'start' });
