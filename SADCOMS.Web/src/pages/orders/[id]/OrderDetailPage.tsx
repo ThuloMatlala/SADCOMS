@@ -7,7 +7,7 @@ import PageHeader from '../../../components/common/PageHeader';
 import OrderDetails from '../../../components/orders/OrderDetails';
 import OrderLineItems from '../../../components/orders/OrderLineItems';
 
-export default function OrderDetailPage() {
+export const OrderDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);

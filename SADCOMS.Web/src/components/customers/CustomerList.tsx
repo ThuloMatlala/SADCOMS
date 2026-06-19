@@ -1,4 +1,3 @@
-import React from 'react'
 import type { Customer } from '../../types'
 
 interface CustomerListProps {
@@ -6,7 +5,7 @@ interface CustomerListProps {
   search: string;
 }
 
-export default function CustomerList({customers, search}:CustomerListProps) {
+export const CustomerList = ({customers, search}:CustomerListProps) =>{
   
   if (!customers || customers.length < 1)
     return (

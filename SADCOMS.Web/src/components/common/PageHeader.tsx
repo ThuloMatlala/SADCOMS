@@ -6,7 +6,7 @@ interface PageHeaderProps{
   parentPageLink: string;
 }
 
-export default function PageHeader({ headerText, parentPageName, parentPageLink}:PageHeaderProps) {
+export const PageHeader = ({ headerText, parentPageName, parentPageLink}:PageHeaderProps) =>{
   return (
     <div className='header'>
       <h1>{headerText}</h1>
