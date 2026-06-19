@@ -6,7 +6,7 @@ interface OrderDetailsProps{
   statusLabel: string;
 }
 
-export default function OrderDetails({ customer, order, statusLabel}:OrderDetailsProps) {
+export const OrderDetails = ({ customer, order, statusLabel}:OrderDetailsProps) => {
   return (
     <div>
       <section>

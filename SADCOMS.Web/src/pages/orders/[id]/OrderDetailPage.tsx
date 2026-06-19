@@ -1,14 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import type { Customer, Order } from '../../../types';
-import { api } from '../../../api/client';
+import { createApi } from '../../../api/client';
 import { statusLabel } from '../../../lib/orderStatus';
 import {PageHeader} from '../../../components/common/PageHeader';
 import OrderDetails from '../../../components/orders/OrderDetails';
 import OrderLineItems from '../../../components/orders/OrderLineItems';
+import { useAuth } from '../../../hooks/useAuth';
 
 export const OrderDetailPage = () => {
   const { id } = useParams<{ id: string }>();
+;
+  const { token } = useAuth();
+  const api = createApi(token);
+
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

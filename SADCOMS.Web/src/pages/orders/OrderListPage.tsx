@@ -1,13 +1,14 @@
 import { useEffect, useReducer, useState } from 'react'
 import type { Order, PagedResult } from '../../types'
-import { api } from '../../api/client';
+import { createApi } from '../../api/client';
 import { Link } from 'react-router-dom';
-import OrderList from '../../components/orders/OrderList';
-import StatusFilter from '../../components/orders/StatusFilter';
-import SortSelector from '../../components/orders/SortSelector';
+import {OrderList} from '../../components/orders/OrderList';
+import {StatusFilter} from '../../components/orders/StatusFilter';
+import {SortSelector} from '../../components/orders/SortSelector';
 import { PageHeader } from '../../components/common/PageHeader';
 import { NumberPerPageSelector } from '../../components/common/Pagination/NumberPerPageSelector';
 import { PageSelector } from '../../components/common/Pagination/PageSelector';
+import { useAuth } from '../../hooks/useAuth';
 
 type FetchState = {
   orders: Order[];
@@ -21,7 +22,7 @@ type FetchAction =
   | { type: 'success'; orders: Order[]; totalCount: number }
   | { type: 'error'; error: string };
 
-function fetchReducer(state: FetchState, action: FetchAction): FetchState {
+const fetchReducer = (state: FetchState, action: FetchAction): FetchState => {
   switch (action.type) {
     case 'start':   return { ...state, loading: true, error: null };
     case 'success': return { loading: false, error: null, orders: action.orders, totalCount: action.totalCount };
@@ -29,7 +30,9 @@ function fetchReducer(state: FetchState, action: FetchAction): FetchState {
   }
 }
 
-export default function OrderListPage() {
+export const OrderListPage = () => {
+  const { token } = useAuth();
+  const api = createApi(token);
   const [{ orders, totalCount, loading, error }, dispatch] = useReducer(fetchReducer, {
     orders: [],
     totalCount: 0,
@@ -54,7 +57,7 @@ export default function OrderListPage() {
       .catch(err => dispatch({ type: 'error', error: err.message }));
   }, [customerId, status, sort, page, pageSize]);
 
-  function handleStatusChange(e: React.ChangeEvent<HTMLSelectElement>) {
+  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setStatus(e.target.value !== '' ? Number(e.target.value) : null);
     setPage(1);
   }

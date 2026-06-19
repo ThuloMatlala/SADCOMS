@@ -4,7 +4,7 @@ interface OrderLineItemsProps{
   lineItems:Array<OrderLineItem>
 }
 
-export default function OrderLineItems({lineItems}:OrderLineItemsProps) {
+export const OrderLineItems = ({lineItems}:OrderLineItemsProps) => {
   return (
       <section>
         <h4>Line Items</h4>

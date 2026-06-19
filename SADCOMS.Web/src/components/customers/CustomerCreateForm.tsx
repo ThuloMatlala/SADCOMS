@@ -1,6 +1,7 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { api } from '../../api/client'
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { createApi } from '../../api/client';
+import { useAuth } from '../../hooks/useAuth';
 
 interface CustomerForm {
   name: string;
@@ -8,30 +9,32 @@ interface CustomerForm {
   countryCode: string;
 }
 
-export default function CustomerCreateForm() {
-  const navigate = useNavigate()
+export const CustomerCreateForm = () => {
+  const navigate = useNavigate();
+  const { token } = useAuth();
+  const api = createApi(token);
   const [form, setForm] = useState<CustomerForm>({ name: '', email: '', countryCode: '' })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [emailError, setEmailError] = useState<string | null>(null)
 
-  function isValidEmail(value: string) {
+  const isValidEmail = (value: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
   }
 
-  function handleChange(e: { target: { name: string; value: string } }) {
+  const handleChange = (e: { target: { name: string; value: string } }) => {
     const { name, value } = e.target
     setForm(prev => ({ ...prev, [name]: value }))
     if (name === 'email') setEmailError(null)
   }
 
-  function handleEmailBlur() {
+  const handleEmailBlur = () => {
     if (form.email && !isValidEmail(form.email)) {
       setEmailError('Please enter a valid email address')
     }
   }
 
-  async function handleSubmit(e: { preventDefault(): void }) {
+  const handleSubmit = async(e: { preventDefault(): void }) => {
     e.preventDefault()
     if (!isValidEmail(form.email)) {
       setEmailError('Please enter a valid email address')

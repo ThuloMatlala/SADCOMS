@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { api } from "../api/client";
+import { createApi } from "../api/client";
 
 interface AuthContextType {
   token: string | null;
@@ -10,8 +10,9 @@ interface AuthContextType {
 // eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext<AuthContextType | null>(null);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
+  const api = createApi(token);
 
   const login = async(password:string) => {
       api.get<{ token: string }>(`/token?password=${password}`)

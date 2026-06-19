@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
-import CustomerCreateForm from "../../../components/customers/CustomerCreateForm";
+import {CustomerCreateForm} from "../../../components/customers/CustomerCreateForm";
 
-
-export default function CustomerCreatePage() {
+export const CustomerCreatePage = () => {
   
   return (
     <div className="container">

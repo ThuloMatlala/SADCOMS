@@ -5,7 +5,7 @@ interface StatusFilterProps{
   handleStatusChange: (e: ChangeEvent<HTMLSelectElement, Element>) => void
 }
 
-export default function StatusFilter({status, handleStatusChange}:StatusFilterProps) {
+export const StatusFilter = ({status, handleStatusChange}:StatusFilterProps) => {
   return (
     <select value={status ?? ''} onChange={handleStatusChange}>
           <option value="">All Statuses</option>

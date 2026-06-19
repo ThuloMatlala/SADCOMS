@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { api } from '../../api/client'
+import { createApi } from '../../api/client'
 import type { Customer, Order } from '../../types'
+import { useAuth } from '../../hooks/useAuth';
 
 interface LineItemDraft {
   productSku: string;
@@ -15,15 +16,17 @@ interface OrderCreateFormProps{
 
 const emptyLineItem = (): LineItemDraft => ({ productSku: '', quantity: '1', unitPrice: '' })
 
-export default function OrderCreateForm({ customers}:OrderCreateFormProps) {
-  const navigate = useNavigate()
+export const OrderCreateForm = ({ customers}:OrderCreateFormProps) => {
+  const navigate = useNavigate();
+  const { token } = useAuth();
+  const api = createApi(token);
   const [customerId, setCustomerId] = useState('')
   const [currencyCode, setCurrencyCode] = useState('')
   const [lineItems, setLineItems] = useState<LineItemDraft[]>([emptyLineItem()])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  function updateLineItem(index: number, field: keyof LineItemDraft, value: string) {
+  const updateLineItem = (index: number, field: keyof LineItemDraft, value: string) => {
     setLineItems(prev => {
       const next = [...prev]
       next[index] = { ...next[index], [field]: value }
@@ -31,7 +34,7 @@ export default function OrderCreateForm({ customers}:OrderCreateFormProps) {
     })
   }
 
-  function formatUnitPrice(index: number) {
+  const formatUnitPrice= (index: number) => {
     setLineItems(prev => {
       const next = [...prev]
       const val = parseFloat(next[index].unitPrice)
@@ -42,7 +45,7 @@ export default function OrderCreateForm({ customers}:OrderCreateFormProps) {
     })
   }
 
-  async function handleSubmit(e: { preventDefault(): void }) {
+  const handleSubmit = async (e: { preventDefault(): void }) => {
     e.preventDefault()
     setLoading(true)
     setError(null)

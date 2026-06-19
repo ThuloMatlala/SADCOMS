@@ -5,8 +5,9 @@ import CustomerCreatePage from './pages/customers/create/CustomerCreatePage';
 import OrderListPage from './pages/orders/OrderListPage';
 import CreateOrderPage from './pages/orders/new/CreateOrderPage';
 import {OrderDetailPage} from './pages/orders/[id]/OrderDetailPage';
+import { AuthProvider } from './context/AuthContext';
 
-function Home() {
+const Home = () => {
   const navigate = useNavigate();
   return (
     <div className='container'>
@@ -17,8 +18,9 @@ function Home() {
   );
 }
 
-function App() {
+const App = () => {
   return (
+    <AuthProvider>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -28,7 +30,8 @@ function App() {
         <Route path="/orders/new" element={<CreateOrderPage />} />
         <Route path="/orders/:id" element={<OrderDetailPage />} />
       </Routes>
-    </BrowserRouter>
+      </BrowserRouter>
+      </AuthProvider>
   )
 }
 

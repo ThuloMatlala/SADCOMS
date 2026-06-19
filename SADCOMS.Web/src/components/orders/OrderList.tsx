@@ -7,7 +7,7 @@ interface OrderListProps{
   orders: Array<Order>;
 }
 
-export default function OrderList({ orders }: OrderListProps) {
+export const OrderList = ({ orders }: OrderListProps) => {
   const navigate = useNavigate();
   
 

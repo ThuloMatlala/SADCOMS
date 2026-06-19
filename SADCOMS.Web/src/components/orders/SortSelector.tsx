@@ -4,7 +4,7 @@ interface SortSelectorProps {
   setPage: (page: number) => void;
 }
 
-export default function SortSelector({ sort, setSort, setPage }: SortSelectorProps) {
+export const SortSelector = ({ sort, setSort, setPage }: SortSelectorProps) => {
   return (
     <select
       value={sort}
