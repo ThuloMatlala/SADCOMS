@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import type { Customer, Order } from '../../../types';
+import { OrderStatus } from '../../../types/Order';
 import { createApi } from '../../../api/client';
 import { statusLabel } from '../../../lib/orderStatus';
 import {PageHeader} from '../../../components/common/PageHeader';
@@ -34,12 +35,17 @@ export const OrderDetailPage = () => {
   if (error) return <div>Error: {error}</div>;
   if (!order) return <div>Order not found</div>;
 
+  const handleUpdateStatus = async (status: OrderStatus) => {
+    const updated = await api.put<Order>(`/orders/${id}/status`, { status });
+    setOrder(updated);
+  };
+
   return (
     <div className="container">
       <PageHeader headerText={'Order detail'} parentPageName={'Orders'} parentPageLink={'/orders'} />
       <p className="text-xs">ID: {order.id}</p>
 
-      {customer && <OrderDetails customer={customer} order={order} statusLabel={statusLabel[order.status]} />}
+      {customer && <OrderDetails customer={customer} order={order} statusLabel={statusLabel[order.status]} onUpdateStatus={handleUpdateStatus} />}
 
       {order && <OrderLineItems lineItems={order.lineItems} />}
     </div>
