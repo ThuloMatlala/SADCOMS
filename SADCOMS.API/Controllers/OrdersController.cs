@@ -7,10 +7,12 @@ using SADCOMS.Domain.Validation;
 using SADCOMS.Domain.Enums;
 using SADCOMS.Domain.Events;
 using SADCOMS.API.Messaging;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SADCOMS.API.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 public class OrdersController : ControllerBase
 {

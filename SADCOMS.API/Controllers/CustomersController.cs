@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SADCOMS.API.Data;
@@ -7,6 +8,7 @@ using SADCOMS.Domain.Entities;
 namespace SADCOMS.API.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 public class CustomersController : ControllerBase
 {

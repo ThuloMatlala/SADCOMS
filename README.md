@@ -89,4 +89,8 @@ Tests follow the **Arrange, Act, Assert** pattern. The focus is on pure domain l
 - [x] RabbitMQ messaging
 - [x] Worker services
 - [x] React frontend
-- [ ] Testing
+- [x] Domain Testing
+- [X] JWT auth
+- [ ] Integration tests for test protected endpoints
+- [ ] Frontend auth — handle 401s, pass token
+- [ ] Order page - Fix sorting
