@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SADCOMS.Domain\SADCOMS.Domain.csproj" />
+    <ProjectReference Include="..\SADCOMS.API\SADCOMS.API.csproj" />
   </ItemGroup>
 
 </Project>

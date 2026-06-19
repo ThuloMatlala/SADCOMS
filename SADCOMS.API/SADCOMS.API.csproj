@@ -26,4 +26,8 @@
     <ProjectReference Include="..\SADCOMS.Domain\SADCOMS.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="SADCOMS.Tests" />
+  </ItemGroup>
+
 </Project>
