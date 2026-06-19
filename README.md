@@ -154,6 +154,37 @@ dotnet test
 ### Testing Approach
 Tests follow the **Arrange, Act, Assert** pattern. The focus is on pure domain logic — no database or HTTP dependencies in unit tests, making them fast and deterministic.
 
+## Messaging & Reliability
+
+### RabbitMQ
+Orders trigger an `OrderCreated` event published to a RabbitMQ direct exchange (`sadcoms`). A background Worker Service consumes this event and simulates fulfillment processing.
+
+### Outbox Pattern
+To guarantee reliable event publishing, the system implements the **Transactional Outbox Pattern**:
+
+1. When an order is created, the `OrderCreated` event is **not** published directly to RabbitMQ
+2. Instead, it is serialized and written to an `OutboxMessages` table **in the same database transaction** as the order itself
+3. A background service (`OutboxPublisher`) polls the `OutboxMessages` table every 5 seconds for unprocessed messages
+4. Each message is published to RabbitMQ and marked as processed (`ProcessedAt` is set)
+
+**Why this matters:** Without the Outbox pattern, a RabbitMQ outage between saving the order and publishing the event would result in a lost event — the order exists in the database but the Worker never processes it. The Outbox pattern eliminates this by making the database the source of truth.
+
+```
+Order Created
+    ↓
+[DB Transaction]
+    ├── Orders table ← order saved
+    └── OutboxMessages table ← event saved
+         ↓
+    [OutboxPublisher - every 5s]
+         ↓
+    RabbitMQ exchange
+         ↓
+    Worker Consumer
+         ↓
+    Fulfillment simulation
+```
+
 ## Status
 - [x] Solution structure
 - [x] Domain entities
@@ -170,5 +201,5 @@ Tests follow the **Arrange, Act, Assert** pattern. The focus is on pure domain l
 - [x] Devops  (Docker Compose + CI pipeline)
 - [x] Update order status (frontend)
 - [x] Fix Order filtering to back-end
-- [ ] Outbox pattern
+- [x] Outbox pattern
 - [ ] ANSWERS.md
