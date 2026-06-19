@@ -1,5 +1,7 @@
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SADCOMS.API.Data;
 using SADCOMS.API.Messaging;
 
@@ -14,9 +16,25 @@ builder.Services.AddSingleton<RabbitMqPublisher>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.Authority = builder.Configuration["Jwt:Authority"];
-        options.Audience = builder.Configuration["Jwt:Audience"];
-        options.RequireHttpsMetadata = false; // dev only
+        var devSecret = builder.Configuration["Jwt:DevSecret"];
+        if (!string.IsNullOrEmpty(devSecret))
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = true,
+                ValidAudience = builder.Configuration["Jwt:Audience"],
+                ValidateLifetime = true,
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(devSecret))
+            };
+        }
+        else
+        {
+            options.Authority = builder.Configuration["Jwt:Authority"];
+            options.Audience = builder.Configuration["Jwt:Audience"];
+            options.RequireHttpsMetadata = false; // dev only
+        }
     });
 
 builder.Services.AddAuthorization();
