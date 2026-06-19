@@ -2,12 +2,23 @@ import React from 'react'
 import type { Customer } from '../../types'
 
 interface CustomerListProps {
-  customers: Array<Customer>
+  customers: Array<Customer>;
+  search: string;
 }
 
-export default function CustomerList({customers}:CustomerListProps) {
+export default function CustomerList({customers, search}:CustomerListProps) {
+  
+  if (!customers || customers.length < 1)
+    return (
+      <>
+        <p>{`There are no customers${search ? ' for the current search criteria' : ''}.`}</p>
+        {!search && <p>Click below to add one.</p>}
+      </>
+    )
+  
+  // 
   return (
-      <table className='w-full text-white'>
+      <table className='table'>
         <thead>
           <tr className='text-left border-b border-white/20'>
             <th className='pb-2 pr-4'>Name</th>

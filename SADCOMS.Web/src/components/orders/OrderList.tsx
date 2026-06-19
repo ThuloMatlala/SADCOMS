@@ -15,7 +15,7 @@ export default function OrderList({ orders }: OrderListProps) {
     return (<p>There are no orders for the selected status</p>)
   
   return (
-    <table className="w-full text-white border-collapse">
+    <table className="table">
       <thead>
         <tr className="text-left border-b border-white/20">
           <th className="py-2 pr-4">Order Id</th>

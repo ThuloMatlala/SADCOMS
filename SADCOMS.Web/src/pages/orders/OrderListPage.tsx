@@ -4,6 +4,7 @@ import { api } from '../../api/client';
 import { Link } from 'react-router-dom';
 import OrderList from '../../components/orders/OrderList';
 import StatusFilter from '../../components/orders/StatusFilter';
+import PageHeader from '../../components/common/PageHeader';
 
 export default function OrderListPage() {
 
@@ -33,11 +34,8 @@ export default function OrderListPage() {
   return (
     
     <div className='container'>
-      <div className='header'>
-        <Link to="/">← Back to Home</Link>
-        <h1>Orders</h1>
-        <StatusFilter status={status} handleStatusChange={ handleStatusChange} />
-      </div>
+          <PageHeader headerText={'Orders'} parentPageName={'Home'} parentPageLink={'/'} />
+      <StatusFilter status={status} handleStatusChange={ handleStatusChange} />
       <OrderList orders={orders} />
 
       <Link to="/orders/new">

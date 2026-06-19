@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import type { Order } from '../../../types';
 import { api } from '../../../api/client';
 import { statusLabel } from '../../../lib/orderStatus';
+import PageHeader from '../../../components/common/PageHeader';
 
 export default function OrderDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -23,10 +24,8 @@ export default function OrderDetailPage() {
 
   return (
     <div className="container">
-      <div className="header">
-        <Link to="/orders">← Back to Orders</Link>
-        <h3>Order #{order.id}</h3>
-      </div>
+      <PageHeader headerText={'Order detail'} parentPageName={'Orders'} parentPageLink={'/orders'} />
+      <p className="text-xs">ID: {order.id}</p>
 
       <section>
         <p><strong>Customer:</strong> {order.customerId}</p>
