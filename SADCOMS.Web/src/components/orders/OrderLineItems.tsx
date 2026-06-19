@@ -8,13 +8,24 @@ export default function OrderLineItems({lineItems}:OrderLineItemsProps) {
   return (
       <section>
         <h4>Line Items</h4>
-        <ul>
-          {lineItems.map(item => (
-            <li key={item.id}>
-              {item.productSku} × {item.quantity} @ {Number(item.unitPrice).toFixed(2)}
-            </li>
-          ))}
-        </ul>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>SKU</th>
+              <th>Quantity</th>
+              <th>Unit Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {lineItems.map(item => (
+              <tr key={item.id}>
+                <td>{item.productSku}</td>
+                <td>{item.quantity}</td>
+                <td>{Number(item.unitPrice).toFixed(2)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </section>
   )
 }
