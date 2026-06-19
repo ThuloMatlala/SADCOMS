@@ -6,8 +6,8 @@ using SADCOMS.Domain.Entities;
 using SADCOMS.Domain.Validation;
 using SADCOMS.Domain.Enums;
 using SADCOMS.Domain.Events;
-using SADCOMS.API.Messaging;
 using Microsoft.AspNetCore.Authorization;
+using System.Text.Json;
 
 namespace SADCOMS.API.Controllers;
 
@@ -19,12 +19,10 @@ public class OrdersController : ControllerBase
   private const int MaxPageSize = 100;
 
   private readonly AppDbContext _context;
-  private readonly RabbitMqPublisher _rabbitMqPublisher;
 
-  public OrdersController(AppDbContext context, RabbitMqPublisher rabbitMqPublisher)
+  public OrdersController(AppDbContext context)
   {
     _context = context;
-    _rabbitMqPublisher = rabbitMqPublisher;
   }
 
   [HttpPost]
@@ -61,9 +59,7 @@ public class OrdersController : ControllerBase
     }).ToList();
 
     order.RecalculateTotalAmount();
-
     _context.Orders.Add(order);
-    await _context.SaveChangesAsync(cancellationToken);
 
     var orderEvent = new OrderCreatedEvent
     (
@@ -73,8 +69,16 @@ public class OrdersController : ControllerBase
       order.CurrencyCode,
       DateTimeOffset.UtcNow
     );
-
-    _rabbitMqPublisher.PublishOrderCreated(orderEvent);
+    
+    var outboxMessage = new OutboxMessage
+    {
+      EventType = nameof(OrderCreatedEvent),
+      Payload = JsonSerializer.Serialize(orderEvent),
+      CreatedAt = DateTimeOffset.UtcNow,
+    };
+    _context.OutboxMessages.Add(outboxMessage);
+    
+    await _context.SaveChangesAsync(cancellationToken);
 
     var response = OrderResponse.FromEntity(order);
     return CreatedAtAction(nameof(GetById), new { id = order.Id }, response);

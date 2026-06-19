@@ -25,4 +25,5 @@ public class AppDbContext : DbContext
   public DbSet<Customer> Customers { get; set; }
   public DbSet<Order> Orders { get; set; }
   public DbSet<OrderLineItem> OrderLineItems { get; set; }
+  public DbSet<OutboxMessage> OutboxMessages { get; set; }
 }
