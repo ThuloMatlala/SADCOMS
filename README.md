@@ -166,7 +166,8 @@ Tests follow the **Arrange, Act, Assert** pattern. The focus is on pure domain l
 - [x] JWT auth
 - [x] Integration tests for protected endpoints
 - [x] Frontend auth — handle 401s, pass token
-- [ ] Outbox pattern
 - [ ] Devops  (Docker Compose + CI pipeline)
-- [ ] ANSWERS.md
 - [ ] Update order status (frontend)
+- [ ] Add order filtering to back-end
+- [ ] Outbox pattern
+- [ ] ANSWERS.md
