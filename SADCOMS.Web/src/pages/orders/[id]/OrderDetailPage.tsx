@@ -4,6 +4,8 @@ import type { Customer, Order } from '../../../types';
 import { api } from '../../../api/client';
 import { statusLabel } from '../../../lib/orderStatus';
 import PageHeader from '../../../components/common/PageHeader';
+import OrderDetails from '../../../components/orders/OrderDetails';
+import OrderLineItems from '../../../components/orders/OrderLineItems';
 
 export default function OrderDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -32,24 +34,9 @@ export default function OrderDetailPage() {
       <PageHeader headerText={'Order detail'} parentPageName={'Orders'} parentPageLink={'/orders'} />
       <p className="text-xs">ID: {order.id}</p>
 
-      <section>
-        <p><strong>Customer:</strong> {customer ? `${customer.name} (${customer.email})` : order.customerId}</p>
-        <p><strong>Status:</strong> {statusLabel[order.status]}</p>
-        <p><strong>Currency:</strong> {order.currencyCode}</p>
-        <p><strong>Total:</strong> {order.currencyCode} {Number(order.totalAmount).toFixed(2)}</p>
-        <p><strong>Created:</strong> {order.createdAt}</p>
-      </section>
+      {customer && <OrderDetails customer={customer} order={order} statusLabel={statusLabel[order.status]} />}
 
-      <section>
-        <h4>Line Items</h4>
-        <ul>
-          {order.lineItems.map(item => (
-            <li key={item.id}>
-              {item.productSku} × {item.quantity} @ {Number(item.unitPrice).toFixed(2)}
-            </li>
-          ))}
-        </ul>
-      </section>
+      {order && <OrderLineItems lineItems={order.lineItems} />}
     </div>
   );
 }
