@@ -11,11 +11,10 @@ export const SortSelector = ({ sort, setSort, setPage }: SortSelectorProps) => {
       onChange={e => { setSort(e.target.value); setPage(1); }}
     >
       <option value="">Default</option>
-      <option value="createdAt_desc">Newest First</option>
-      <option value="createdAt_asc">Oldest First</option>
-      <option value="totalAmount_desc">Amount: High to Low</option>
-      <option value="totalAmount_asc">Amount: Low to High</option>
-      <option value="status_asc">Status: A–Z</option>
+      <option value="-createdAt">Newest First</option>
+      <option value="createdAt">Oldest First</option>
+      <option value="-totalAmount">Amount: High to Low</option>
+      <option value="totalAmount">Amount: Low to High</option>
     </select>
   );
 }
