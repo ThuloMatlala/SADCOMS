@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import type { Customer, Order } from '../../../types';
 import { api } from '../../../api/client';
 import { statusLabel } from '../../../lib/orderStatus';
-import PageHeader from '../../../components/common/PageHeader';
+import {PageHeader} from '../../../components/common/PageHeader';
 import OrderDetails from '../../../components/orders/OrderDetails';
 import OrderLineItems from '../../../components/orders/OrderLineItems';
 

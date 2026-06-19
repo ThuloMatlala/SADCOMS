@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
-import CustomerListPage from './pages/customers/CustomerListPage';
+import {CustomerListPage} from './pages/customers/CustomerListPage';
 import './App.css'
 import CustomerCreatePage from './pages/customers/create/CustomerCreatePage';
 import OrderListPage from './pages/orders/OrderListPage';
 import CreateOrderPage from './pages/orders/new/CreateOrderPage';
-import OrderDetailPage from './pages/orders/[id]/OrderDetailPage';
+import {OrderDetailPage} from './pages/orders/[id]/OrderDetailPage';
 
 function Home() {
   const navigate = useNavigate();
