@@ -83,4 +83,12 @@ User personal information (Customer.Email) should be encrypted at rest using AES
 Access to the data user data (Customer table) should be least-privileged access and have documented policy, personnel and justification for data retention.
 
 10. GraphQL
-GraphQL would make sense for reporting dashboard that needs different shapes and aggegations of data. It can also be useful for bandwidth sensitive solutions where we want to return just what is needed. 
+GraphQL is a query language for API's. It returns objects in the "shape" a given client requests. No more, no less. 
+
+For SADCOMS, GraphQL makes sense for reporting dashboard that needs different shapes and aggregations of data. It can also be useful for bandwidth sensitive solutions where we want to return just what is needed. 
+
+GraphQl queries present a unqiue problem where queries do not scale well. For our case if 100 orders need customer data, that would be a 100 DBqueries. We can use GraphQL's batching mechanism (DataLoader) to bypass this problem. 
+
+A REST API makes sense for this solution as the response shape is fixed, caching is easy and tooling is mature.
+GraphQL would be a valuable addition as a read-only layer for reporting or a mobile application.
+## SQL SECTION
