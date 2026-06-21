@@ -13,7 +13,7 @@ We could also decouple writes from order processing. On every order, we could pu
 
 Lastly, we could use a caching-aside strategy using Redis to reduce DB load. 
 
-1. Message reliability
+3. Message reliability
 The messages processed by the API are persisted to the database in same transaction as the order. That new message in the outbox-messages is read by the API's Background Worker Service, which checks for unprocessed messages in the OutBoxMessages. It then publishes the unprocessed messages to the 'order.created' queue which is then consumed by the Worker servive that processes the order. This is referred to as the Outbox pattern. 
 
 If RabbitMQ is down, the message stays in OutboxMessages with `ProcessedAt = null` and is retried on the next Background Worker Service poll cycle — that's the reliability guarantee.
@@ -91,4 +91,168 @@ GraphQl queries present a unqiue problem where queries do not scale well. For ou
 
 A REST API makes sense for this solution as the response shape is fixed, caching is easy and tooling is mature.
 GraphQL would be a valuable addition as a read-only layer for reporting or a mobile application.
+
 ## SQL SECTION
+### 1. Pagination query
+```sql
+SELECT
+    Id,
+    CustomerId,
+    Status,
+    TotalAmount,
+    CreatedAt
+FROM Orders
+ORDER BY CreatedAt DESC
+OFFSET (@page - 1) * @pageSize ROWS
+FETCH NEXT @pageSize ROWS ONLY;
+```
+- `ORDER BY` is required for consistent pagination — without it SQL Server returns rows in unpredictable order. 
+- `OFFSET` skips rows from previous pages
+- `FETCH NEXT` limits the result set.
+
+### 2. Top spenders
+```sql
+SELECT
+    c.Name,
+    SUM(o.TotalAmount) AS TotalSpend
+FROM Customers c
+INNER JOIN Orders o ON o.CustomerId = c.Id
+WHERE o.CreatedAt >= DATEADD(DAY, -90, GETDATE())
+GROUP BY c.Id, c.Name
+ORDER BY TotalSpend DESC;
+```
+
+### 3. Index strategy
+```sql
+CREATE INDEX IX_Orders_CustomerId ON Orders(CustomerId, Status, CreatedAt);
+```
+
+A composite index allows to filter by one or more combinations of columns in the index i.e. `CustomerId` OR `CustomerId, Status` OR `CustomerId, Status, CreatedAt`. This is with the assumption that the cusomterId filter will be the most used.
+
+### 4. Execution plan and removing key look ups
+Execution plan - This is a detailed report/visualization of the most efficient way to retrieve data or run a given query.
+Removing key look ups:
+- a key lookup happens when an index doesn't contain all the columns the query needs, so SQL Server has to go back to the main table to fetch the missing columns. To remove them we can append a covering index of commonly attached columns to the index i.e.
+```sql
+SELECT TotalAmount, CurrencyCode FROM Orders WHERE CustomerId = '123'; --is expensive at scale
+
+CREATE INDEX IX_Orders_CustomerId 
+ON Orders(CustomerId, Status, CreatedAt)
+INCLUDE (TotalAmount, CurrencyCode);
+```
+
+
+### 5. Optimistic concurrency using rowversion.
+Optimistic concurrency refers to the concept of checking a record's value state when saving to the database rather than locking that record from being read or updated by other resources. The idea is that conflicts when saving are rare.
+
+To achieve it in our solution, the Order Entity has a RowVersion field. This is a type that is auto-incremented by a SQL SERVER when an Order record is update. i.e.
+- You read an order to update it — `RowVersion = 0x0000000000000001`
+- Someone else updates the order — `RowVersion becomes 0x0000000000000002`
+- You try to save — EF sends the original RowVersion in the WHERE clause:
+```sql
+UPDATE Orders
+SET Status = 2
+WHERE Id = '123' 
+AND RowVersion = 0x0000000000000001  -- no longer matches
+```
+- zero rows affected - concurrency exception thrown and we tell the user that the record was updated and asked them to try again 
+
+### 6. Deadlock scenario and mitigation.
+A deadlock occurs when 2 SQL transactions are waiting for another to release a lock on a resource and neither one of them can move proceed with their transaction. 
+
+i.e. 2 transations, waiting for the other to finish
+Transaction 1:                    Transaction 2:
+1. Lock Customer row (Id=1)       1. Lock Order row (Id=99)
+2. Try to lock Order row (Id=99)  2. Try to lock Customer row (Id=1)
+   → WAITING for 2                   → WAITING for 1
+
+- SQL picks one as the deadlock victim and rolls it back with an error. 
+
+To avoid this we can keep transactions short and be aware of the order in which resources are locked. This explicitly avoids the scenario stated above. Also, when an error mentioned above is thrown, we can retry the transaction `options.EnableRetryOnFailure(maxRetryCount: 3);` Db context definition
+
+### 7. Window function example
+```sql
+SELECT
+    CustomerId,
+    TotalAmount,
+    CreatedAt,
+    SUM(TotalAmount) OVER (
+        PARTITION BY CustomerId
+        ORDER BY CreatedAt
+    ) AS RunningTotal
+FROM Orders
+ORDER BY CustomerId, CreatedAt;
+```
+
+The `ORDER BY` inside `OVER()` controls the accumulation window — each row's RunningTotal is the sum of all previous rows for that customer up to and including the current CreatedAt. 
+
+### 8. Partitioning strategy for large datasets
+Table partitioning splits a large table into smaller physical chunks based on a column value, while keeping it looking like a single table to the application.
+
+For SADCOMS, `CreatedAt` is the right partition key because orders are almost always queried by date range. SQL Server can then skip entire partitions that fall outside the filter — if you query for orders from 2026, it only scans the 2026 partition, not the whole table.
+
+It also makes archiving clean — old partitions (2023, 2024) can be migrated out to an archive table instantly, without running a slow row-by-row delete.
+
+The pattern fits naturally because new orders land in the current year's partition (high activity), while old ones sit in older partitions that rarely change
+
+### 9. Outbox pattern database design.
+The outbox pattern is outlined in `3. Message reliability` above. Below is a breakdown of the table at the core of this:
+
+
+```sql
+CREATE TABLE OutboxMessages (
+    Id          UNIQUEIDENTIFIER    NOT NULL DEFAULT NEWID(),
+    EventType   NVARCHAR(MAX)       NOT NULL,
+    Payload     NVARCHAR(MAX)       NOT NULL,
+    CreatedAt   DATETIMEOFFSET      NOT NULL,
+    ProcessedAt DATETIMEOFFSET      NULL,
+
+    CONSTRAINT PK_OutboxMessages PRIMARY KEY (Id)
+);
+```
+- `ProcessedAt` is the key column — NULL means unprocessed, a timestamp means it's been published. 
+- The `OutboxPublisher` background service polls for rows where `ProcessedAt IS NULL`, publishes them to the `order.created` queue, 
+- Then stamps `ProcessedAt = now`
+- `Payload` is the JSON-serialised event body 
+- `EventType` tells the consumer what to deserialise it into (i.e. order.created).
+
+The reliability comes from writing the outbox row in the same transaction as the order. Either both land or neither does — you can never have an order without a corresponding outbox entry. That's the guarantee the pattern is built on.
+
+### 10. SP Example for a transaction report
+```sql
+CREATE PROCEDURE GetTransactionReport
+    @StartDate DATETIMEOFFSET,
+    @EndDate   DATETIMEOFFSET
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        o.Id                        AS OrderId,
+        c.Name                      AS CustomerName,
+        o.Status,
+        o.TotalAmount,
+        o.CurrencyCode,
+        o.CreatedAt,
+        COUNT(li.Id)                AS LineItemCount
+    FROM Orders o
+    INNER JOIN Customers c  ON c.Id = o.CustomerId
+    LEFT JOIN  OrderLineItems li ON li.OrderId = o.Id
+    WHERE o.CreatedAt >= @StartDate
+      AND o.CreatedAt <= @EndDate
+    GROUP BY
+        o.Id,
+        c.Name,
+        o.Status,
+        o.TotalAmount,
+        o.CurrencyCode,
+        o.CreatedAt
+    ORDER BY o.CreatedAt DESC;
+END;
+```
+
+Exmaple call: 
+
+```sql
+EXEC GetTransactionReport @StartDate = '2026-01-01', @EndDate = '2026-06-21';
+```
